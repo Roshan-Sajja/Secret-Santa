@@ -12,7 +12,6 @@ export const generatePairings = (
     };
   }
 
-  // Build exclusion map
   const exclusionMap = new Map<string, Set<string>>();
   participants.forEach(p => {
     exclusionMap.set(p.id, new Set([p.id]));
@@ -25,7 +24,6 @@ export const generatePairings = (
     }
   });
 
-  // Pre-calc allowed receivers per giver (exclusions applied)
   const allowedReceivers = new Map<string, Participant[]>();
   participants.forEach(giver => {
     const excluded = exclusionMap.get(giver.id) || new Set<string>();
@@ -35,7 +33,6 @@ export const generatePairings = (
     );
   });
 
-  // Try to find a valid assignment using backtracking
   const givers = [...participants];
   const assignment: Map<string, string> = new Map();
   const failureLog = new Set<string>();
@@ -80,8 +77,17 @@ export const generatePairings = (
 
   if (!found) {
     const reasons = new Set<string>();
+    const receiverAvailability = new Map<string, Participant[]>();
 
-    // Givers with zero or single options are likely the blockers
+    participants.forEach(receiver => {
+      const eligibleGivers = participants.filter(giver => {
+        if (giver.id === receiver.id) return false;
+        const excluded = exclusionMap.get(giver.id) ?? new Set<string>();
+        return !excluded.has(receiver.id);
+      });
+      receiverAvailability.set(receiver.id, eligibleGivers);
+    });
+
     participants.forEach(giver => {
       const allowed = allowedReceivers.get(giver.id) || [];
       const excludedNames = participants
@@ -99,11 +105,25 @@ export const generatePairings = (
       }
     });
 
-    // Add dynamic failures from the backtracking attempts
+    participants.forEach(receiver => {
+      const eligibleGivers = receiverAvailability.get(receiver.id) || [];
+      const blockers = participants
+        .filter(giver => giver.id !== receiver.id && (exclusionMap.get(giver.id)?.has(receiver.id) ?? false))
+        .map(g => g.name);
+
+      if (eligibleGivers.length === 0) {
+        const blockerNames = blockers.length > 0 ? ` (${blockers.join(', ')})` : '';
+        reasons.add(`No one can give to ${receiver.name} because every giver excludes them${blockerNames}.`);
+      } else if (eligibleGivers.length === 1) {
+        const blockerNames = blockers.length > 0 ? `; most others exclude them (${blockers.join(', ')})` : '';
+        reasons.add(`${receiver.name} can only receive from ${eligibleGivers[0].name}${blockerNames}.`);
+      }
+    });
+
     failureLog.forEach(r => reasons.add(r));
 
     if (reasons.size === 0) {
-      reasons.add('The exclusion rules create a cycle that blocks a valid assignment.');
+      reasons.add('The exclusion rules create a cycle that blocks a valid assignment (everyone keeps running into someone already taken).');
       reasons.add('Try removing or relaxing one of the exclusions and generate again.');
     }
 

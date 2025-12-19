@@ -9,6 +9,7 @@ interface FeasibilityIndicatorProps {
 }
 
 export default function FeasibilityIndicator({ participants, exclusions }: FeasibilityIndicatorProps) {
+  // Lightweight status to warn if rules might be too strict
   const feasibility = getFeasibility(participants, exclusions);
 
   return (

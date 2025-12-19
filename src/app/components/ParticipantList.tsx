@@ -9,6 +9,7 @@ interface ParticipantListProps {
 
 export default function ParticipantList({ participants, onRemove }: ParticipantListProps) {
   return (
+    // Only show the table once we have at least one person added
     <AnimatePresence mode="wait">
       {participants.length > 0 && (
         <motion.div

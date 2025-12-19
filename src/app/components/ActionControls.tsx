@@ -9,6 +9,7 @@ interface ActionControlsProps {
 
 export default function ActionControls({ onGenerate, onReset, canGenerate }: ActionControlsProps) {
   return (
+    // Main CTA buttons for the flow
     <motion.section
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}

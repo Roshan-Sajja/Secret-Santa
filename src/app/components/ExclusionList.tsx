@@ -10,6 +10,7 @@ interface ExclusionListProps {
 
 export default function ExclusionList({ exclusions, participants, onRemove }: ExclusionListProps) {
   return (
+    // Quick table showing every exclusion currently active
     <AnimatePresence mode="wait">
       {exclusions.length > 0 && (
         <motion.div
