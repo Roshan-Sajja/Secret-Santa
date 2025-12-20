@@ -7,7 +7,12 @@ Interactive Secret Santa planner built with React and Vite. Add participants, se
 I treated this like a mini product owner assignment and listed features by release. I have these in a Google Sheet with columns: Feature, Release (Prototype/v1/v2), Notes
 
 [Feature Board](https://docs.google.com/spreadsheets/d/1bZ02irf73Khb40RGcmdgFm6RM8_HGJirAWHisUuY8q4/edit?usp=sharing)
+
 [Website link](https://secret-santa-puce-zeta.vercel.app/)
+
+![ER diagram](docs/ERD.jpeg)
+
+![API diagram](docs/API%20diagram.jpg)
 
 ## Features in this Prototype
 - Add participants with email validation and duplicate detection
