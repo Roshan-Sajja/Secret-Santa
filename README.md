@@ -5,6 +5,7 @@ Interactive Secret Santa planner built with React and Vite. Add participants, se
 
 ## Product Plan
 I treated this like a mini product owner assignment and listed features by release. I have these in a Google Sheet with columns: Feature, Release (Prototype/v1/v2), Notes
+https://docs.google.com/spreadsheets/d/1bZ02irf73Khb40RGcmdgFm6RM8_HGJirAWHisUuY8q4/edit?usp=sharing
 
 ## Features in this Prototype
 - Add participants with email validation and duplicate detection
@@ -27,7 +28,7 @@ I treated this like a mini product owner assignment and listed features by relea
 - Manual name/email entry
 - Bulk-load test participants
 - Add previous assignments/exclusions
-- Generate pairings, show message when no valid solution exists, and render results
+- Generate pairings, show a message when no valid solution exists, and render results
 
 ## Usage
 - Add each participant’s name and email, or click **Load Sample Data**
