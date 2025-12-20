@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Users, ShieldBan } from 'lucide-react';
 import { motion } from 'motion/react';
+import { Analytics } from '@vercel/analytics/react';
 import { Participant, Exclusion, GenerationResult } from './types';
 import { SAMPLE_PARTICIPANTS } from './constants';
 import { generatePairings } from './utils/pairing';
@@ -147,6 +148,7 @@ export default function App() {
           </p>
         </motion.footer>
       </div>
+      <Analytics />
     </div>
   );
 }
