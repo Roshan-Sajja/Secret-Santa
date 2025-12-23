@@ -4,19 +4,21 @@ export const generatePairings = (
   participants: Participant[],
   exclusions: Exclusion[]
 ): GenerationResult => {
-  if (participants.length < 2) {
+  if (participants.length < 3) {
     return {
       success: false,
       error: 'Not enough participants',
-      reasons: ['At least 2 participants are required for Secret Santa'],
+      reasons: ['At least 3 participants are required for Secret Santa'],
     };
   }
 
+  //Excluding self
   const exclusionMap = new Map<string, Set<string>>();
+
   participants.forEach(p => {
     exclusionMap.set(p.id, new Set([p.id]));
   });
-
+  //user-defined exclusions
   exclusions.forEach(e => {
     const set = exclusionMap.get(e.giverId);
     if (set) {
@@ -25,6 +27,7 @@ export const generatePairings = (
   });
 
   const allowedReceivers = new Map<string, Participant[]>();
+
   participants.forEach(giver => {
     const excluded = exclusionMap.get(giver.id) || new Set<string>();
     allowedReceivers.set(
@@ -43,7 +46,9 @@ export const generatePairings = (
     }
 
     const giver = givers[giverIndex];
+    //all receivers this giver can legally give to
     const allowed = allowedReceivers.get(giver.id) || [];
+    //receivers that are legal and not taken by previous givers
     const available = allowed.filter(receiver => !assignment.has(receiver.id));
 
     if (available.length === 0) {
@@ -62,23 +67,23 @@ export const generatePairings = (
 
     for (const receiver of available) {
       assignment.set(receiver.id, giver.id);
-
+      //recurse to next giver
       if (backtrack(giverIndex + 1)) {
         return true;
       }
-
+      //recursion failed, undo assignment and try next
       assignment.delete(receiver.id);
     }
 
     return false;
   };
-
+  //run backtracking from first giver
   const found = backtrack(0);
 
   if (!found) {
     const reasons = new Set<string>();
     const receiverAvailability = new Map<string, Participant[]>();
-
+    //receiver availability 
     participants.forEach(receiver => {
       const eligibleGivers = participants.filter(giver => {
         if (giver.id === receiver.id) return false;
@@ -87,7 +92,7 @@ export const generatePairings = (
       });
       receiverAvailability.set(receiver.id, eligibleGivers);
     });
-
+    //adding reasons from giver perspective
     participants.forEach(giver => {
       const allowed = allowedReceivers.get(giver.id) || [];
       const excludedNames = participants
@@ -104,7 +109,7 @@ export const generatePairings = (
         reasons.add(`${giver.name} can only give to ${allowed[0].name} based on current exclusions.`);
       }
     });
-
+    //adding reasons from receiver perspective
     participants.forEach(receiver => {
       const eligibleGivers = receiverAvailability.get(receiver.id) || [];
       const blockers = participants
@@ -119,7 +124,7 @@ export const generatePairings = (
         reasons.add(`${receiver.name} can only receive from ${eligibleGivers[0].name}${blockerNames}.`);
       }
     });
-
+    //merging all failure logs
     failureLog.forEach(r => reasons.add(r));
 
     if (reasons.size === 0) {
@@ -133,7 +138,7 @@ export const generatePairings = (
       reasons: Array.from(reasons),
     };
   }
-
+  //successfully found assignment and building pairings list
   const pairings: Pairing[] = givers.map(giver => {
     const receiverId = Array.from(assignment.entries()).find(
       ([recId, givId]) => givId === giver.id
@@ -153,18 +158,17 @@ export const generatePairings = (
 
   return { success: true, pairings };
 };
-
+//risk indicator
 export const getFeasibility = (
   participants: Participant[],
   exclusions: Exclusion[]
 ): 'solvable' | 'warning' | 'none' => {
-  if (participants.length < 2) return 'none';
-
+  if (participants.length < 3) return 'none';
+  //counting exclusions per giver
   const exclusionMap = new Map<string, number>();
   participants.forEach(p => {
     exclusionMap.set(p.id, 1);
   });
-
   exclusions.forEach(e => {
     exclusionMap.set(e.giverId, (exclusionMap.get(e.giverId) || 0) + 1);
   });

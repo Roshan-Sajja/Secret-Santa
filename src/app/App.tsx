@@ -130,7 +130,7 @@ export default function App() {
         <ActionControls
           onGenerate={handleGenerate}
           onReset={handleReset}
-          canGenerate={participants.length >= 2}
+          canGenerate={participants.length >=3}
         />
 
         <ResultsDisplay result={result} />

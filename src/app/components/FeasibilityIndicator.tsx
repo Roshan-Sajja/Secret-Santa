@@ -14,7 +14,7 @@ export default function FeasibilityIndicator({ participants, exclusions }: Feasi
 
   return (
     <AnimatePresence>
-      {participants.length >= 2 && (
+      {participants.length >= 3 && (
         <motion.section
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}

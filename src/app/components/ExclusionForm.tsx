@@ -142,7 +142,7 @@ export default function ExclusionForm({ participants, exclusions, onAdd, onRemov
             setSelectedReceivers([]);
           }}
           className="w-full px-4 py-3 border border-border rounded-xl bg-input-background transition-all focus:outline-none focus:ring-2 focus:ring-[var(--festive-red)]/20 focus:border-[var(--festive-red)] hover:border-[var(--olive-muted)] appearance-none cursor-pointer"
-          disabled={participants.length < 2}
+          disabled={participants.length < 3}
         >
           <option value="">Select giver</option>
           {participants.map(p => (
@@ -219,7 +219,7 @@ export default function ExclusionForm({ participants, exclusions, onAdd, onRemov
         whileHover={{ scale: 1.01 }}
         whileTap={{ scale: 0.99 }}
         onClick={handleAddExclusion}
-        disabled={participants.length < 2}
+        disabled={participants.length < 3}
         className="inline-flex items-center gap-2 px-5 py-3 bg-[var(--olive-dark)] text-[var(--tan)] rounded-xl hover:bg-[var(--olive-dark)]/90 transition-all border border-[var(--olive-muted)]/30 disabled:opacity-50 disabled:cursor-not-allowed"
       >
         <Ban size={18} />
