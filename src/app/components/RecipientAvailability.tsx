@@ -7,10 +7,9 @@ import { Exclusion, Participant } from '../types';
 interface RecipientAvailabilityProps {
   participants: Participant[];
   exclusions: Exclusion[];
-  embedded?: boolean;
 }
 
-export default function RecipientAvailability({ participants, exclusions, embedded = false }: RecipientAvailabilityProps) {
+export default function RecipientAvailability({ participants, exclusions}: RecipientAvailabilityProps) {
   const { availability, matrix } = useMemo(() => {
     if (participants.length === 0) {
       return { availability: [], matrix: new Map<string, Map<string, boolean>>() };
@@ -62,7 +61,6 @@ export default function RecipientAvailability({ participants, exclusions, embedd
 
   if (participants.length === 0) return null;
 
-  if (embedded) {
     return (
       <div className="mt-6 pt-4 border-t border-border/60">
         <div className="flex items-center justify-between mb-3">
@@ -145,5 +143,3 @@ export default function RecipientAvailability({ participants, exclusions, embedd
       </div>
     );
   }
-
-}

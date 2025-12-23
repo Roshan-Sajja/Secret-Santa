@@ -229,7 +229,6 @@ export default function ExclusionForm({ participants, exclusions, onAdd, onRemov
       <RecipientAvailability
         participants={participants}
         exclusions={exclusions}
-        embedded
       />
     </div>
   );
